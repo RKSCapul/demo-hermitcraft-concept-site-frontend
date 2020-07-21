@@ -4,7 +4,7 @@ import { Quasar } from 'quasar';
 
 // Styles 
 import './styles/css/fonts.css';
-import './styles/sass/quasar.sass';
+import './styles/quasar.sass';
 
 // Icons (CSS)
 import '@quasar/extras/roboto-font/roboto-font.css';
