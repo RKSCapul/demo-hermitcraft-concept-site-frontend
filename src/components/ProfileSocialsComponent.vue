@@ -83,7 +83,7 @@
 </template>
 
 <style lang="sass">
-  @import '../styles/sass/quasar.variables.sass'  
+  @import '../styles/quasar.variables.sass'  
 
   @media (max-width: $breakpoint-xs-max)
     .username
