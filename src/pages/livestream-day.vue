@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vue-headful :title="getTitle()" />
+    <vue-headful :title="title" />
     <div class="title-header">
       <div class="text-h2 font-montserrat text-uppercase">
         Hermitcraft 
