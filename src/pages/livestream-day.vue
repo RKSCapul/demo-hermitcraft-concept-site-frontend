@@ -1,5 +1,6 @@
 <template>
   <div>
+    <vue-headful :title="getTitle()" />
     <div class="title-header">
       <div class="text-h2 font-montserrat text-uppercase">
         Hermitcraft 
@@ -94,6 +95,7 @@
     
     data () {
       return {
+        title: 'Live | r.cpl demo | Hermitcraft Concept Redesign',
         items: [],
         livestreamStatus: [],
         continents: [
