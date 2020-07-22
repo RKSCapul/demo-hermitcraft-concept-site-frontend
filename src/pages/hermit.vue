@@ -1,5 +1,6 @@
 <template>
   <div>
+    <vue-headful :title="getTitle()" />
     <div class="q-pr-lg q-pb-lg no-wrap q-gutter-md">
       <ProfileSocialsComponent
         :hermit="mappedHermitData[0]" 
@@ -90,6 +91,7 @@
 
     data () {
       return {
+        title: 'r.cpl demo | Hermitcraft Concept Redesign',
         hermitData: [],
         mappedHermitData: [],
         mappedHermitVideos: [],
@@ -107,6 +109,14 @@
     },
 
     methods: {
+      getTitle() {
+        if (this.dataLoaded) {
+          return `${this.mappedHermitData[0].name} | ${this.title}`;
+        }
+
+        return this.title;
+      },
+
       getHermitData() {
         const _data = getChannelData();
         const { data } = _data;

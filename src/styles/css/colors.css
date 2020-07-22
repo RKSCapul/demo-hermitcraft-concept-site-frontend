@@ -1,0 +1,21 @@
+/* twitch: '#6441a5',
+  youtube: '#c4302b',
+  twitter: '00acee',
+  instagram: '#fb3958',
+  mixer: '#000000', */
+
+
+:root {
+  --color-twitch:     #6441a5;
+  --color-youtube:    #c4302b;
+  --color-twitter:    #00acee;
+  --color-instagram:  #fb3958;
+}
+
+.live-on-twitch {
+  background-color: var(--color-twitch) !important;
+}
+
+.live-on-youtube {
+  background-color: var(--color-youtube) !important;
+}

@@ -1,9 +1,10 @@
 // Main
 import Vue from 'vue';
-import { Quasar } from 'quasar';
+import { Quasar, Notify } from 'quasar';
 
 // Styles 
 import './styles/css/fonts.css';
+import './styles/css/colors.css';
 import './styles/quasar.sass';
 
 // Icons (CSS)
@@ -18,6 +19,7 @@ Vue.use(Quasar, {
   components: { /* not needed if importStrategy is not 'manual' */ },
   directives: { /* not needed if importStrategy is not 'manual' */ },
   plugins: {
+    Notify,
   },
   iconSet: iconSet
 })

@@ -1,11 +1,17 @@
 <template>
-  <q-page class="flex flex-center">
+  <div class="flex flex-center">
+    <vue-headful :title="title" />
     Homepage
-  </q-page>
+  </div>
 </template>
 
 <script>
   export default {
-    name: 'Home'
+    name: 'Home',
+    data () {
+      return {
+        title: 'r.cpl demo | Hermitcraft Concept Redesign',
+      }
+    },
   }
 </script>

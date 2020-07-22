@@ -51,7 +51,7 @@
 
             <q-item-section side>
               <div class="row items-center" v-if="displayActiveTwitchStreams()">
-                <q-avatar class="color-twitch" size="sm" text-color="white">
+                <q-avatar class="live-on-twitch" size="sm" text-color="white">
                   {{ activeTwitchStreams }}
                 </q-avatar>
               </div>
@@ -59,7 +59,7 @@
           </template>
 
           <q-card>
-            <q-card-section class="hermit-card-2 font-open-sans">
+            <q-card-section class="q-pa-none font-open-sans">
               <q-list>
                 <q-item 
                   v-for="hermit in hermitsOrganized.active" 
@@ -77,7 +77,7 @@
                     {{hermit.name}}
                   </q-item-section>
                   <q-item-section side v-if="hermit.livestreams.twitch.isChannelLive">
-                    <q-badge class="color-twitch" label="LIVE" />
+                    <q-badge class="live-on-twitch" label="LIVE" />
                   </q-item-section>
                 </q-item>
               </q-list>
@@ -182,7 +182,7 @@
           </template>
 
           <q-card>
-            <q-card-section class="hermit-card-2 font-open-sans">
+            <q-card-section class="q-pa-none font-open-sans">
               <q-list class="font-open-sans">
                 <q-item clickable v-ripple>
                   <q-item-section>
@@ -220,10 +220,6 @@
   .main-container {
     min-width: 300px;
   }
-
-  .live-on-twitch {
-    background-color: red !important;
-  }
 </style>
 
 <script>
@@ -258,7 +254,7 @@
         this.$q.notify({
           message: `${name} is live now on ${platform}!`,
           position: 'top-right',
-          classes: `color-${platform.toLowerCase()} font-open-sans`,
+          classes: `live-on-${platform.toLowerCase()} font-open-sans`,
 
           avatar: profile,
           timeout: 10000,
