@@ -2,60 +2,98 @@
   <div>
     <vue-headful :title="title" />
     <div class="title-header">
-      <div class="text-h2 font-montserrat text-uppercase">
+      <div class="text-h4 font-montserrat text-uppercase">
         Hermitcraft 
         <span class="font-shadows-into-light text-red-7 text-bold">
           Live!
         </span>
       </div>
     </div>
-    <div class="q-pa-md row justify-center">
-      <q-btn-group>
-        <q-btn color="green" @click="timeSelect = true">Select your area</q-btn>
-        <q-btn color="green" disable icon="r_schedule" label="Manila (UTC+8:00)" />
-      </q-btn-group>
+    <div class="row q-px-md q-pt-sm justify-center">
+      <q-card
+        bordered 
+        class="home-card q-mt-lg full-width" 
+      >
+        <q-item 
+          clickable 
+          v-ripple 
+          class="no-padding"
+          @click="timeSelect = true"
+        >
+          <q-card-section horizontal>
+            <q-card-section>
+              <div class="flex flex-center">
+                <q-icon 
+                  color="primary"
+                  name="r_scheduler"
+                  size="sm"
+                />
+              </div>
+            </q-card-section>
+            <q-card-section class="q-pl-none text-h6">
+              <span class="no-margin text-primary font-open-sans">
+                Select your area: 
+              </span>
+              <span class="text-weight-bold no-margin text-bold">
+                Manila, PH (UTC+8)
+              </span>
+            </q-card-section>
+          </q-card-section>
+        </q-item>
+      </q-card>
     </div>
-    <div class="q-pa-md row justify-center q-gutter-md">
-      <div v-if="scheduleLoaded" class="full-width">
-        <LivestreamScheduleTableComponent 
-          v-for="schedule in items" 
-          :key="schedule.livestreamCode" 
-          :livestream="schedule" 
-          :status="livestreamStatus[schedule.livestreamCode]"
-        />
-      </div>
+    <div 
+      class="row q-px-md q-pt-md justify-center"
+      v-if="scheduleLoaded"
+    >
+      <LivestreamScheduleTableComponent 
+        v-for="schedule in items" 
+        class="full-width"
+        :key="schedule.livestreamCode" 
+        :livestream="schedule" 
+        :status="livestreamStatus[schedule.livestreamCode]"
+      />
+    </div>
+    <div 
+      class="row q-px-md q-pt-md justify-center"
+      v-else
+    >
+      <q-spinner
+        color="secondary"
+        class="q-my-md"
+        size="2em"
+      />
     </div>
 
     <q-dialog
       v-model="timeSelect"
     >
-      <q-card style="width: 300px" class="font-open-sans">
+      <q-card style="width: 300px">
         <q-card-section>
-          <div class="text-h6 font-merriweather">Choose your area</div>
+          <div class="text-h6">Choose your area</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
           <q-select
-            color="teal"
-            label-color="teal" 
+            color="secondary"
             label="Continent"
             v-model="selectedContinent" 
             :options="continents"
           />
           <q-select
-            color="teal"
-            label-color="teal" 
+            color="secondary" 
             label="Contry"
             v-model="selectedCountry"
             :options="continents"
           />
         </q-card-section>
 
-        <q-card-actions align="right" class="bg-white text-teal">
-          <q-btn flat label="OK" v-close-popup class="text-bold" />
+        <q-card-actions align="right">
+          <q-btn flat label="OK" v-close-popup class="bg-primary text-white" />
         </q-card-actions>
       </q-card>
     </q-dialog>
+    
   </div>
 </template>
 
@@ -68,6 +106,15 @@
     text-transform: none !important;
   }
 
+  .card-icon-ico {
+    font-size: 32px;
+  }
+
+  .card-icon-bg {
+    min-width: 40px;
+    min-height: 40px;
+  }
+
   .my-card {
     width: 100%;
     max-width: 300px;
@@ -76,8 +123,6 @@
 
 <script>
   import LivestreamScheduleTableComponent from '../components/LivestreamScheduleTableComponent.vue';
-
-  //import livestreamDay from '../data/data-livestream-day.js';
 
   import { 
     fetchLivestreams, 
@@ -109,14 +154,14 @@
         selectedContinent: null,
         selectedCountry: null,
         timeSelect: false,
-        scheduleLoaded: true,
+        scheduleLoaded: false,
         status_interval: null,
       }
     },
 
     created () {
       this.fetchLivestreamSchedule()
-      this.fetchLivestreamStatusInterval()
+      //this.fetchLivestreamStatusInterval()
     },
 
     methods: {

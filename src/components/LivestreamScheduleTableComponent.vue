@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pt-md full-width">
+  <div class="full-width q-mb-md">
     <q-table 
       :title="title"
       class="my-sticky-header-column-table"
@@ -11,10 +11,14 @@
       hide-bottom
     >
 
-      <template v-slot:top>
-        <div>
-          <div class="text-h5 text-weight-bold text-uppercase">{{description}}</div>
-          <div class="text-h6 font-open-sans text-weight-regular">{{date}}</div>
+      <template v-slot:top bg-color="warning">
+        <div class="text-h6">
+          <span class="text-weight-bold text-uppercase">
+            {{ description }}
+          </span>
+          <span class="font-open-sans">
+            - {{ date }}
+          </span>
         </div>
       </template>
 
@@ -24,7 +28,7 @@
             :key="props.cols[0].name"
             :props="props"
           > 
-            <div class="font-open-sans text-h6 text-bold text-teal-10">{{ props.cols[0].label.toUpperCase() }}</div>
+            <div class="font-open-sans text-h6 text-bold">{{ props.cols[0].label.toUpperCase() }}</div>
           </q-th>
           <q-th auto-width />
           <q-th auto-width class="lt-md"/>
@@ -34,7 +38,7 @@
             :key="col.name"
             :props="props"
           >
-            <div class="font-open-sans text-h6 text-bold text-teal-10">{{ col.label.toUpperCase() }}</div>
+            <div class="font-open-sans text-h6 text-bold">{{ col.label.toUpperCase() }}</div>
           </q-th>
         </q-tr>
       </template>
@@ -46,38 +50,46 @@
           :class="props.row.isLive ? 'is-live' : ''"
         >
           <q-td>
-            <div class="row">
+            <div class="row items-center">
               <q-avatar size="42px" class="q-mr-sm">
-                <img :src="props.row.accountPicture || '../assets/images/others/redstone.png'">
+                <img :src="props.row.accountPicture">
               </q-avatar>
               <div class="font-open-sans">
-                <div class="text-bold text-h6">{{props.row.hermit}}</div>
+                <div class="text-bold">{{props.row.hermit}}</div>
                 <q-space />
                 <q-badge 
                   align="middle"
                   :style="'background-color: ' + colors[props.row.platform.toLowerCase()]"
-                  :label="props.row.platform"
+                  :label="'Live on ' + props.row.platform"
                 />
               </div>
             </div>
           </q-td>
-          <q-td>
+          <td>
             <q-btn 
               v-if="props.row.isLive"
               rounded
               flat
-              size="md"
+              size="sm"
               label="Live"
               class="text-white"
               :style="'background-color: ' + colors[props.row.platform.toLowerCase()]"
             />
-          </q-td>
-          <q-td class="lt-md">
             <q-btn 
+              v-else
+              round
+              flat
+              size="md"
+              :icon="fabTwitch"
+              :style="'color: ' + colors[props.row.platform.toLowerCase()]"
+            />
+          </td>
+          <q-td class="lt-md">
+            <q-btn
               round 
               dense 
               size="md"
-              class="text-white q-ml-sm"
+              class="text-white lt-md q-ml-xs"
               :style="'background-color: ' + colors[props.row.platform.toLowerCase()]"
               @click="props.expand = !props.expand" 
               :icon="props.expand ? 'r_expand_less' : 'r_expand_more'" 
@@ -110,6 +122,7 @@
           </q-td>
         </q-tr>
       </template>
+      
     </q-table>
   </div>
 </template>
@@ -134,16 +147,20 @@
 </style>
 
 <style lang="sass">
-  .my-sticky-header-column-table
+  @import '~quasar-variables'
 
+  .my-sticky-header-column-table
     .q-table__top,
     .q-table__bottom
-      /* bg color is important for th; just specify one */
-      background-color: #1de9b6
+      background-color: $secondary
+      color: #fff
 
     // td:first-child
     //   /* bg color is important for td; just specify one */
     //   background-color: #fff !important
+
+    th
+      color: $secondary
 
     tr th
       position: sticky
@@ -178,6 +195,8 @@
   import timezones from '../data/data-default-timezones.js';
   import brandColors from '../data/data-brand-colors.js';
 
+  import { fabTwitch } from '@quasar/extras/fontawesome-v5';
+
   import moment from 'moment-timezone';
 
   export default {
@@ -194,16 +213,7 @@
         title: '',
         liveStreamState: {},
         colors: brandColors,
-      }
-    },
-
-    watch: {
-      schedule() {
-        this.setLivestreamStatus();
-      },
-
-      status() {
-        this.setLivestreamStatus();
+        fabTwitch: fabTwitch
       }
     },
 
@@ -216,7 +226,7 @@
 
     methods: {
       constructHeaderDate(_title) {
-        return moment(_title).format('DD MMMM yyyy - dddd');
+        return 'This ' + moment(_title).format('dddd, Do of MMMM yyyy');
       },
 
       constructDate(_date, timezone) {
@@ -253,14 +263,6 @@
         });
 
         return timeslots;
-      },
-
-      getImagePath(hermit) {
-        try {
-          return require(`../assets/images/${hermit.replace(' ', '').toLowerCase()}.png`);
-        } catch (err) {
-          return null;
-        }
       },
 
       getLivestreamState(hermitCode) {
