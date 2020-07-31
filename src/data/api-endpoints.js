@@ -100,9 +100,9 @@ function getLivestreamStatus() {
   return livestreamStatus;
 }
 
-async function fetchLivestreamStatus(livestreamCode) {
+async function fetchLivestreamStatus() {
   await axios
-    .get(`${WEB_API}/api/livestream/${livestreamCode}/status`)
+    .get(`${WEB_API}/api/livestream/status`)
     .then(json => setLivestreamStatus(json));
 }
 
