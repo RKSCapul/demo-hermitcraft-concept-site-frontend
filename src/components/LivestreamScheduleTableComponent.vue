@@ -11,7 +11,7 @@
       hide-bottom
     >
 
-      <template v-slot:top bg-color="warning">
+      <template v-slot:top>
         <div>
           <div class="text-h5 text-weight-bold text-uppercase">{{description}}</div>
           <div class="text-h6 font-open-sans text-weight-regular">{{date}}</div>
@@ -24,23 +24,26 @@
             :key="props.cols[0].name"
             :props="props"
           > 
-            <div class="font-open-sans text-h6 text-bold text-green-10">{{ props.cols[0].label.toUpperCase() }}</div>
+            <div class="font-open-sans text-h6 text-bold text-teal-10">{{ props.cols[0].label.toUpperCase() }}</div>
           </q-th>
           <q-th auto-width />
+          <q-th auto-width class="lt-md"/>
           <q-th
             v-for="col in props.cols.slice(1)"
             class="gt-sm"
             :key="col.name"
             :props="props"
           >
-            <div class="font-open-sans text-h6 text-bold text-green-10">{{ col.label.toUpperCase() }}</div>
+            <div class="font-open-sans text-h6 text-bold text-teal-10">{{ col.label.toUpperCase() }}</div>
           </q-th>
         </q-tr>
       </template>
       
       <template v-slot:body="props">
         <q-tr 
-          :props="props" :class="liveStreamState[props.row.hermitCode] ? 'is-live' : ''"
+          :key="props.row.hermitCode"
+          :props="props" 
+          :class="props.row.isLive ? 'is-live' : ''"
         >
           <q-td>
             <div class="row">
@@ -60,7 +63,7 @@
           </q-td>
           <q-td>
             <q-btn 
-              v-if="liveStreamState[props.row.hermitCode]"
+              v-if="props.row.isLive"
               rounded
               flat
               size="md"
@@ -68,11 +71,13 @@
               class="text-white"
               :style="'background-color: ' + colors[props.row.platform.toLowerCase()]"
             />
+          </q-td>
+          <q-td class="lt-md">
             <q-btn 
               round 
               dense 
               size="md"
-              class="text-white lt-md q-ml-sm"
+              class="text-white q-ml-sm"
               :style="'background-color: ' + colors[props.row.platform.toLowerCase()]"
               @click="props.expand = !props.expand" 
               :icon="props.expand ? 'r_expand_less' : 'r_expand_more'" 
@@ -124,7 +129,7 @@
   }
 
   tr.is-live {
-    background-color: #D1C4E9 !important;
+    background-color: #b2dfdb !important;
   }
 </style>
 
@@ -134,7 +139,7 @@
     .q-table__top,
     .q-table__bottom
       /* bg color is important for th; just specify one */
-      background-color: #c1f4cd
+      background-color: #1de9b6
 
     // td:first-child
     //   /* bg color is important for td; just specify one */
@@ -188,7 +193,17 @@
         schedule: [],
         title: '',
         liveStreamState: {},
-        colors: brandColors
+        colors: brandColors,
+      }
+    },
+
+    watch: {
+      schedule() {
+        this.setLivestreamStatus();
+      },
+
+      status() {
+        this.setLivestreamStatus();
       }
     },
 
@@ -201,7 +216,7 @@
 
     methods: {
       constructHeaderDate(_title) {
-        return moment(_title).format('DD MMMM yyyy');
+        return moment(_title).format('DD MMMM yyyy - dddd');
       },
 
       constructDate(_date, timezone) {
@@ -248,22 +263,28 @@
         }
       },
 
-      getLivestreamStatus(hermitCode) {
+      getLivestreamState(hermitCode) {
         if (!this.status) return false;
 
         const index = this.status.findIndex(hermit => hermit.hermitCode === hermitCode);
         const data = this.status[index];
 
         const twitchLive = data.livestreams.twitch.isChannelLive;
-
+        
         return twitchLive;
+      },
+
+      setLivestreamStatus() {
+        if (!this.schedule) return;
+
+        this.schedule.map(item => {
+          item.isLive = this.getLivestreamState(item.hermitCode)
+        });
       },
 
       getTimeZones(data) {
         return data.map(item => {
           const hermit = `${item.member}  `
-
-          this.liveStreamState[item.hermitCode] = this.getLivestreamStatus(item.hermitCode)
 
           return {
             hermitCode: item.hermitCode,
@@ -274,9 +295,10 @@
                     item.endTimeUTC
                   ),
             platform: item.platform, 
+            isLive: false,
           };
         });
-      }
+      },
     }
   }
 </script>

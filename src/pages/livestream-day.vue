@@ -110,11 +110,13 @@
         selectedCountry: null,
         timeSelect: false,
         scheduleLoaded: true,
+        status_interval: null,
       }
     },
 
     created () {
       this.fetchLivestreamSchedule()
+      this.fetchLivestreamStatusInterval()
     },
 
     methods: {
@@ -145,12 +147,18 @@
         const { data } = _data;
 
         this.livestreamStatus = data;
-        this.scheduleLoaded = true;
       },
 
       async fetchLivestreamStatus() {
-        this.scheduleLoaded = false;
         await fetchLivestreamStatus().then(() => this.getLivestreamStatus())
+      },
+
+      fetchLivestreamStatusInterval() {
+        this.fetchLivestreamStatus()
+
+        this.status_interval = setInterval(() => {
+          this.fetchLivestreamStatus()
+        }, 150000)
       }
     }
   }
