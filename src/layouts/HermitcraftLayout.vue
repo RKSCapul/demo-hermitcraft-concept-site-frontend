@@ -9,7 +9,6 @@
         @click="leftDrawerOpen = !leftDrawerOpen"
       />
       <q-space />
-      <q-btn flat stretch label="Back to demo homescreen" :to="getHomePage()"/>
       <q-btn flat stretch label="Back to post" />
     </q-toolbar>
 
@@ -19,14 +18,36 @@
       content-class="bg-grey-1 text-grey"
     >
       <q-list class="text-black">
-        <q-item-label
-          header 
-          class="font-open-sans"
-        >
-          r.cpl | 2020
+        <q-item-label header class="font-open-sans">
+          2020 - Hermitcraft<br><hr>
+          <span class="text-red">
+            Disclaimer: I am not connected with Hermitcraft and its members. 
+            This is a concept web design for Hermitcraft.com, focused on mobile optimization.
+          </span>
         </q-item-label>
 
-        <q-item clickable v-ripple class="text-red-10" :to="getHomePage() + 'livestream'">
+        <q-item 
+          clickable 
+          v-ripple 
+          class="text-black"
+          :to="getHomePage()"
+        >
+          <q-item-section avatar>
+            <q-icon name="r_home" />
+          </q-item-section>
+
+          <q-item-section class="text-weight-bold text-uppercase">
+            Home
+          </q-item-section>
+        </q-item>
+
+        <q-item 
+          clickable 
+          v-ripple 
+          v-if="isHermitListLoaded"
+          class="text-red-10" 
+          :to="getHomePage() + 'livestream'"
+        >
           <q-item-section avatar>
             <q-icon color="red-10" name="r_live_tv" />
           </q-item-section>
@@ -35,10 +56,10 @@
             Hermitcraft Live
           </q-item-section>
         </q-item>
-
+        
         <q-expansion-item
           expand-separator
-          v-if="hermitsOrganized.active"
+          v-if="isHermitListLoaded"
         >
           <template v-slot:header>
             <q-item-section avatar>
@@ -84,15 +105,10 @@
             </q-card-section>
           </q-card>
         </q-expansion-item>
-        <q-item v-else>
-          <q-item-section>
-            <q-skeleton animation="wave" />
-          </q-item-section>
-        </q-item>
 
         <q-expansion-item
           expand-separator
-          v-if="hermitsOrganized.inactive"
+          v-if="isHermitListLoaded"
         >
           <template v-slot:header>
             <q-item-section avatar>
@@ -127,13 +143,11 @@
             </q-card-section>
           </q-card>
         </q-expansion-item>
-        <q-item v-else>
-          <q-item-section>
-            <q-skeleton animation="wave" />
-          </q-item-section>
-        </q-item>
 
-        <q-expansion-item expand-separator>
+        <q-expansion-item 
+          expand-separator
+          v-if="isHermitListLoaded"
+        >
           <template v-slot:header>
             <q-item-section avatar>
               <q-icon name="r_link" />
@@ -170,7 +184,10 @@
           </q-card>
         </q-expansion-item>
 
-        <q-expansion-item expand-separator>
+        <q-expansion-item 
+          expand-separator
+          v-if="isHermitListLoaded"
+        >
           <template v-slot:header>
             <q-item-section avatar>
               <q-icon name="r_maps" />
@@ -184,30 +201,36 @@
           <q-card>
             <q-card-section class="q-pa-none font-open-sans">
               <q-list class="font-open-sans">
-                <q-item clickable v-ripple>
-                  <q-item-section>
-                    Vanilla Season 1
+                <q-item 
+                  clickable 
+                  v-ripple
+                  v-for="items in seasonMaps"
+                  :key="items.index"
+                >
+                  <q-item-section avatar>
+                    <q-avatar :color="items.icon.color" text-color="white" size="30px">
+                      {{ items.icon.caption }}
+                    </q-avatar>
                   </q-item-section>
-                </q-item>
-                <q-item clickable v-ripple>
                   <q-item-section>
-                    Vanilla Season 2
-                  </q-item-section>
-                </q-item>
-                <q-item clickable v-ripple>
-                  <q-item-section>
-                    Vanilla Season 3
+                    {{ items.name }}
                   </q-item-section>
                 </q-item>
               </q-list>
             </q-card-section>
           </q-card>
         </q-expansion-item>
+
+        <q-item v-else>
+          <q-item-section>
+            <q-skeleton animation="wave" />
+          </q-item-section>
+        </q-item>
       </q-list>
     </q-drawer>
 
     <q-page-container>
-      <div class="main-container q-pl-lg">
+      <div class="main-container">
         <q-page-container class="no-padding">
           <router-view />
         </q-page-container>
@@ -223,6 +246,8 @@
 </style>
 
 <script>
+  import s6Maps from '../data/data-season-maps.js'
+
   import {
     fetchChannels, 
     getData 
@@ -238,10 +263,14 @@
         leftDrawerOpen: false,
         loadingHermitsComplete: false,
         hermitsOrganized: {},
+        isHermitListLoaded: false,
+        seasonMaps: [],
       }
     },
 
     created () {
+      this.seasonMaps = s6Maps;
+
       this.fetchChannelsFromApi();
     },
 
@@ -253,14 +282,13 @@
       showNotification(name, profile, platform) {
         this.$q.notify({
           message: `${name} is live now on ${platform}!`,
-          position: 'top-right',
-          classes: `live-on-${platform.toLowerCase()} font-open-sans`,
+          position: 'bottom-right',
+          classes: `font-open-sans`,
 
           avatar: profile,
           timeout: 10000,
           actions: [
             { label: 'Watch Now!', color: 'white', handler: () => { /* ... */ } },
-            { label: 'Watch Later', color: 'white', handler: () => { /* ... */ } }
           ]
         })
       },
@@ -305,7 +333,7 @@
         });
 
         this.hermitsOrganized = tempHermits;
-        this.loadingHermitsComplete = true;
+        this.isHermitListLoaded = true;
       },
 
       fetchChannelsFromApi() {
