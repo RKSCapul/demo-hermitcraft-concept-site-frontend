@@ -24,11 +24,19 @@
             <div class="col-12 col-md-3 col-lg-2 q-mt-md social-group-column">
               <div class="q-mb-md social-group-column-item">
                 <div class="text-h5 text-bold text-uppercase">Socials</div>
-                <sidebar-social-item-component />
+                <sidebar-social-item-component 
+                  v-for="data in socialData"
+                  :key="data.index"
+                  :socials="data"
+                />
               </div>
               <div class="social-group-column-item">
                 <div class="text-h5 text-bold text-uppercase">Groups</div>
-                <sidebar-group-item-component />
+                <sidebar-group-item-component 
+                  v-for="data in groupData"
+                  :key="data.index"
+                  :group="data" 
+                />
               </div>
             </div>
           </div>
@@ -86,6 +94,14 @@
     getChannelVideos,
   } from '../data/api-endpoints.js'
 
+  import groupIcons from '../data/data-vector-icon-collection.js';
+  import socialIcons from '../data/data-icons-social-media-collection.js';
+
+  // import {
+  //   fabInstagram,
+  //   fabTwitter,
+  // } from '@quasar/extras/fontawesome-v5';
+
   export default {
     name: 'IndexDemo',
     props: [ 'username' ],
@@ -120,6 +136,34 @@
 
     created () {
       this.fetchHermitData(this.username);
+      
+      // TODO: Temporary mock data, while backend not yet integrated with frontend.
+      this.groupData = [
+        {
+          index: 1,
+          icon: groupIcons.redstone,
+          name: 'Redstone'
+        },
+        {
+          index: 2,
+          icon: groupIcons.builder,
+          name: 'Builder'
+        }
+      ];
+
+      // TODO: Temporary mock data, while backend not yet integrated with frontend.
+      this.socialData = [
+        {
+          index: 1,
+          icon: socialIcons.twitter,
+          name: 'Twitter'
+        },
+        {
+          index: 2,
+          icon: socialIcons.instagram,
+          name: 'Instagram'
+        }
+      ];
     },
 
     methods: {

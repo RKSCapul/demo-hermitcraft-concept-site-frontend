@@ -11,19 +11,15 @@
       @click="timeSelect = true"
     >
       <q-card-section horizontal>
-        <q-card-section class="q-pa-md">
+        <q-card-section class="q-py-xs">
           <div class="flex flex-center">
-            <q-icon 
-              color="primary"
-              name="r_scheduler"
-              size="sm"
-            />
+            <img :src="loadVector(group.icon)" class="icon" />
           </div>
         </q-card-section>
         <q-card-section class="q-pl-none">
-          <span class="caption font-open-sans no-margin">
-            Redstone
-          </span>
+          <div class="caption font-open-sans no-margin">
+            {{ group.name }}
+          </div>
         </q-card-section>
       </q-card-section>
     </q-item>
@@ -36,26 +32,23 @@
   .caption 
     font-size: map-get($h6, "size")
 
+  .icon
+    width: 45px
+
   @media (min-width: $breakpoint-xs-min) and (max-width: $breakpoint-sm-max)
     .caption
       font-size: map-get($body1, "size")
 </style>
 
 <script>
-  import brandColors from '../data/data-brand-colors.js'
-
   export default {
     name: 'SidebarGroupItemComponent',
-    data () {
-      return {
-        colors: brandColors,
-      }
-    },
-
+    props: [ 'group' ],
+    
     methods: {
-      externalRedirect(href) {
-        window.open(href, '_blank');
-      },
+      loadVector(filename) {
+        return require(`../assets/vectors/${filename}`)
+      }
     }
   };
 </script>
