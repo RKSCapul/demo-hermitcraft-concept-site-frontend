@@ -15,14 +15,14 @@
           <div class="flex flex-center">
             <q-icon 
               color="primary"
-              name="r_scheduler"
+              :name="socials.icon"
               size="sm"
             />
           </div>
         </q-card-section>
         <q-card-section class="q-pl-none">
           <span class="caption font-open-sans no-margin">
-            Twitte
+            {{ socials.name }}
           </span>
         </q-card-section>
       </q-card-section>
@@ -42,15 +42,9 @@
 </style>
 
 <script>
-  import brandColors from '../data/data-brand-colors.js'
-
   export default {
     name: 'SidebarSocialItemComponent',
-    data () {
-      return {
-        colors: brandColors,
-      }
-    },
+    props: [ 'socials' ],
 
     methods: {
       externalRedirect(href) {
