@@ -1,7 +1,9 @@
 <template>
   <div class="flex flex-center">
     <vue-headful :title="title" />
-    Homepage
+    <div class="text-h4 font-montserrat text-uppercase">
+      Recent Uploads
+    </div>
   </div>
 </template>
 

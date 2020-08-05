@@ -19,7 +19,7 @@
     >
       <q-list class="text-black">
         <q-item-label header class="font-open-sans">
-          2020 - Hermitcraft<br><hr>
+          2020 - r_coder - demo<br><hr>
           <span class="text-red">
             Disclaimer: I am not connected with Hermitcraft and its members. 
             This is a concept web design for Hermitcraft.com, focused on mobile optimization.
@@ -54,6 +54,22 @@
 
           <q-item-section class="text-weight-bold text-uppercase">
             Hermitcraft Live
+          </q-item-section>
+        </q-item>
+
+        <q-item 
+          clickable 
+          v-ripple 
+          v-if="isHermitListLoaded"
+          class="text-primary" 
+          :to="getHomePage() + 'timeline'"
+        >
+          <q-item-section avatar>
+            <q-icon color="primary" name="r_history" />
+          </q-item-section>
+
+          <q-item-section class="text-weight-bold text-uppercase">
+            Hermitcraft Timeline
           </q-item-section>
         </q-item>
         
