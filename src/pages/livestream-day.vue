@@ -42,17 +42,27 @@
         </q-item>
       </q-card>
     </div>
-    <div 
-      class="row q-px-md q-pt-md justify-center"
-      v-if="scheduleLoaded"
-    >
-      <LivestreamScheduleTableComponent 
-        v-for="schedule in items" 
-        class="full-width"
-        :key="schedule.livestreamCode" 
-        :livestream="schedule" 
-        :status="livestreamStatus[schedule.livestreamCode]"
-      />
+    <div v-if="scheduleLoaded">
+      <div 
+        v-for="(status, index) in items"
+        class="row q-px-md" 
+        :key="index"
+      >
+        <div 
+          class="text-h5 q-mt-lg text-bold text-uppercase"
+          v-if="status.schedules.length"
+        > 
+          {{ status.caption }}
+        </div>
+        <q-separator class="q-mt-xs q-mb-md" v-if="status.schedules.length" />
+        <livestream-schedule-table-component
+          v-for="schedule in status.schedules" 
+          class="full-width"
+          :key="schedule.livestreamCode" 
+          :livestream="schedule" 
+          :status="livestreamStatus[schedule.livestreamCode]"
+        />
+      </div>
     </div>
     <div 
       class="row q-px-md q-pt-md justify-center"
@@ -140,7 +150,7 @@
     
     data () {
       return {
-        title: 'Live | r.cpl demo | Hermitcraft Concept Redesign',
+        title: 'Live | Hermitcraft Concept Redesign | r_coder demo',
         items: [],
         livestreamStatus: [],
         continents: [
@@ -161,7 +171,6 @@
 
     created () {
       this.fetchLivestreamSchedule()
-      //this.fetchLivestreamStatusInterval()
     },
 
     methods: {
@@ -178,8 +187,33 @@
         const _data = getLivestreams()
         const { data } = _data;
 
-        this.items = data;
+        let happeningNow = [];
+        let upcomingSchedules = [];
+
+        data.map(item => {
+          if (!item.ongoing) {
+            upcomingSchedules.push(item);
+          } else {
+            happeningNow.push(item);
+          }
+        });
+
+        this.items = [
+          {
+            caption: 'Happening Today!',
+            schedules: happeningNow,
+          },
+          {
+            caption: 'Upcoming Schedules',
+            schedules: upcomingSchedules,
+          }
+        ];
+
         this.scheduleLoaded = true;
+
+        if (happeningNow.length) {
+          this.fetchLivestreamStatusInterval();
+        }
       },
 
       async fetchLivestreamSchedule() {
@@ -195,6 +229,9 @@
       },
 
       async fetchLivestreamStatus() {
+        const _d = new Date()
+        console.log('>> fetching livestream status >> ' + _d.getHours() + ":" + _d.getMinutes() + ":" + _d.getSeconds())  
+
         await fetchLivestreamStatus().then(() => this.getLivestreamStatus())
       },
 
