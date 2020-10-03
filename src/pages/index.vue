@@ -12,7 +12,7 @@
     name: 'Home',
     data () {
       return {
-        title: 'r.cpl demo | Hermitcraft Concept Redesign',
+        title: 'Hermitcraft Concept Redesign | r_coder demo',
       }
     },
   }
