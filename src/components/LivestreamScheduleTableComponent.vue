@@ -2,7 +2,7 @@
   <div class="full-width q-mb-md">
     <q-table 
       :title="title"
-      class="my-sticky-header-column-table"
+      :class="'livestream-table ' + applyState()"
       :columns="columns"
       :data="schedule"
       :rows-per-page-options="[0]" 
@@ -11,7 +11,7 @@
       hide-bottom
     >
 
-      <template v-slot:top bg-color="warning">
+      <template v-slot:top>
         <div class="text-h6">
           <span class="text-weight-bold text-uppercase">
             {{ description }}
@@ -70,7 +70,7 @@
               v-if="props.row.isLive"
               rounded
               flat
-              size="sm"
+              size="md"
               label="Live"
               class="text-white"
               :style="'background-color: ' + colors[props.row.platform.toLowerCase()]"
@@ -136,32 +136,12 @@
   .header {
     text-align: center;
   }
-
-  .header-title {
-    color: var(--q-color-negative);
-  }
-
-  tr.is-live {
-    background-color: #b2dfdb !important;
-  }
 </style>
 
 <style lang="sass">
   @import '~quasar-variables'
 
-  .my-sticky-header-column-table
-    .q-table__top,
-    .q-table__bottom
-      background-color: $secondary
-      color: #fff
-
-    // td:first-child
-    //   /* bg color is important for td; just specify one */
-    //   background-color: #fff !important
-
-    th
-      color: $secondary
-
+  .livestream-table
     tr th
       position: sticky
       /* higher than z-index for td below */
@@ -188,6 +168,25 @@
     td:first-child, th:first-child
       position: sticky
       left: 0
+
+  .upcoming
+    .q-table__top
+      background-color: $primary
+      color: #fff
+
+    th
+      color: $primary
+
+  .ongoing
+    .q-table__top
+      background-color: $secondary
+      color: #fff
+
+    th
+      color: $secondary
+
+    tr.is-live
+      background-color: lighten($secondary, 50%) !important
 </style>
 
 <script>
@@ -217,6 +216,12 @@
       }
     },
 
+    watch: {
+      status() {
+        this.setLivestreamStatus()
+      }
+    },
+
     created () {
       this.columns = columns;
       this.date = this.constructHeaderDate(this.livestream.date);
@@ -225,6 +230,10 @@
     },
 
     methods: {
+      applyState() {
+        return this.livestream.ongoing ? 'ongoing' : 'upcoming';
+      },
+
       constructHeaderDate(_title) {
         return 'This ' + moment(_title).format('dddd, Do of MMMM yyyy');
       },

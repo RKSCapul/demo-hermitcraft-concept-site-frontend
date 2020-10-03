@@ -97,11 +97,6 @@
   import groupIcons from '../data/data-vector-icon-collection.js';
   import socialIcons from '../data/data-icons-social-media-collection.js';
 
-  // import {
-  //   fabInstagram,
-  //   fabTwitter,
-  // } from '@quasar/extras/fontawesome-v5';
-
   export default {
     name: 'IndexDemo',
     props: [ 'username' ],
@@ -121,7 +116,7 @@
 
     data () {
       return {
-        title: 'r.cpl demo | Hermitcraft Concept Redesign',
+        title: 'Hermitcraft Concept Redesign | r_coder demo',
         hermitData: [],
         mappedHermitData: [],
         mappedHermitVideos: [],

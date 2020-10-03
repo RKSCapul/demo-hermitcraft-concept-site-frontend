@@ -54,7 +54,7 @@
     
     data () {
       return {
-        title: 'Timeline | r.cpl demo | Hermitcraft Concept Redesign',
+        title: 'Timeline | Hermitcraft Concept Redesign | r_coder demo',
         items: [],
       }
     },

@@ -85,7 +85,7 @@
     
     data () {
       return {
-        title: 'Timeline | r.cpl demo | Hermitcraft Concept Redesign',
+        title: 'Timeline | Hermitcraft Concept Redesign | r_coder demo',
         isRight: false,
         timeline: {},
         timelineLoaded: false,
@@ -96,7 +96,7 @@
     created () {
       this.isRight = false;
       this.timeline = this.formatData(timelineData[this._name]);
-      this.title = `${this.timeline.header} | r.cpl demo | Hermitcraft Concept Redesign`;
+      this.title = `${this.timeline.header} | Hermitcraft Concept Redesign | r_coder demo`;
     },
 
     methods: {
