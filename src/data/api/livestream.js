@@ -15,7 +15,7 @@ function setHermitLive(data) {
 }
 
 function getHermitLive() {
-  return hermitLive;
+  return hermitLive.data;
 }
 
 async function fetchHermitLive(channel) {
@@ -30,7 +30,7 @@ function setLiveActiveHermits(data) {
 }
 
 function getLiveActiveHermits() {
-  return liveActiveHermits;
+  return liveActiveHermits.data;
 }
 
 async function fetchLiveActiveHermits() {
@@ -45,7 +45,7 @@ function setLiveSchedule(data) {
 }
 
 function getLiveSchedule() {
-  return liveSchedule;
+  return liveSchedule.data;
 }
 
 async function fetchLiveSchedule() {
@@ -60,7 +60,7 @@ function setLiveSlotStatus(data) {
 }
 
 function getLiveSlotStatus() {
-  return liveSlotStatus;
+  return liveSlotStatus.data;
 }
 
 async function fetchLiveSlotStatus() {

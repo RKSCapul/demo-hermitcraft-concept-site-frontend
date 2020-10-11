@@ -14,7 +14,7 @@ function setHermitGroup(data) {
 }
 
 function getHermitGroup() {
-  return hermitGroups;
+  return hermitGroups.data;
 }
 
 async function fetchHermitGroup(channel) {
@@ -29,7 +29,7 @@ function setGroupList(data) {
 }
 
 function getGroupList() {
-  return groupList;
+  return groupList.data;
 }
 
 async function fetchGroupList() {
@@ -44,7 +44,7 @@ function setGroupMembers(data) {
 }
 
 function getGroupMembers() {
-  return groupMembers;
+  return groupMembers.data;
 }
 
 async function fetchGroupMembers(name) {

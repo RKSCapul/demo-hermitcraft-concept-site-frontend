@@ -15,7 +15,7 @@ function setHermitChannels(data) {
 }
 
 function getHermitChannels() {
-  return hermitChannels;
+  return hermitChannels.data;
 }
 
 async function fetchHermitChannels() {
@@ -30,7 +30,7 @@ function setHermitActiveRecentVideos(data) {
 }
 
 function getHermitActiveRecentVideos() {
-  return hermitActiveRecentVideos;
+  return hermitActiveRecentVideos.data;
 }
 
 async function fetchHermitActiveRecentVideos() {
@@ -45,7 +45,7 @@ function setHermitData(data) {
 }
 
 function getHermitData() {
-  return hermitData;
+  return hermitData.data;
 }
 
 async function fetchHermitData(channel) {
@@ -60,7 +60,7 @@ function setHermitVideos(data) {
 }
 
 function getHermitVideos() {
-  return hermitVideos;
+  return hermitVideos.data;
 }
 
 async function fetchHermitVideos(channel) {
