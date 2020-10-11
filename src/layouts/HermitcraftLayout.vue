@@ -113,9 +113,11 @@
                   <q-item-section>
                     {{hermit.name}}
                   </q-item-section>
-                  <!-- <q-item-section side v-if="hermit.livestreams.twitch.isChannelLive">
-                    <q-badge class="live-on-twitch" label="LIVE" />
-                  </q-item-section> -->
+                  <q-item-section side v-if="hermit.livestreams.twitch">
+                    <q-item-section v-if="hermit.livestreams.twitch.isChannelLive">
+                      <q-badge class="live-on-twitch" label="LIVE" />
+                    </q-item-section>
+                  </q-item-section>
                 </q-item>
               </q-list>
             </q-card-section>
@@ -286,6 +288,7 @@
         hermitsOrganized: {},
         isHermitListLoaded: false,
         seasonMaps: [],
+        fetchLiveActiveHermitsInterval: null,
       }
     },
 
@@ -305,7 +308,6 @@
           message: `${name} is live now on ${platform}!`,
           position: 'bottom-right',
           classes: `font-open-sans`,
-
           avatar: profile,
           timeout: 10000,
           actions: [
@@ -323,10 +325,6 @@
             item.accountPicture,
             'Twitch',
           );
-        }
-
-        if (item.livestreams.youtube.isChannelLive) {
-          this.activeYouTubeStreams++;
         }
       },
 
@@ -356,7 +354,7 @@
         this.isHermitListLoaded = true;
 
         if (this.isHermitListLoaded)
-          this.executeFetchLiveActiveHermits();
+          this.executeFetchLiveActiveHermitsInterval();
       },
 
       executeFetchChannels() {
@@ -374,14 +372,25 @@
 
       organizeHermitLivestreamData() {
         const _lsData = getLiveActiveHermits();
-
+        
+        this.activeTwitchStreams = 0;
         this.hermitsOrganized.active.map(item => {
           item.livestreams = this.getLivestreamData(_lsData, item.channel);
+
+          this.countActiveStreams(item);
         });
       },
 
       executeFetchLiveActiveHermits() {
         fetchLiveActiveHermits().then(() => this.organizeHermitLivestreamData());
+      },
+
+      executeFetchLiveActiveHermitsInterval() {
+        this.executeFetchLiveActiveHermits();
+
+        this.fetchLiveActiveHermitsInterval = setInterval(() => {
+          this.executeFetchLiveActiveHermits()
+        }, 150000);
       },
 
       getHomePage() {
