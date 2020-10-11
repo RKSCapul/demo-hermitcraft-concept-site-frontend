@@ -134,12 +134,12 @@
 <script>
   import LivestreamScheduleTableComponent from '../components/LivestreamScheduleTableComponent.vue';
 
-  import { 
-    fetchLivestreams, 
-    getLivestreams,
-    fetchLivestreamStatus,
-    getLivestreamStatus 
-  } from '../data/api-endpoints.js'
+  import {
+    fetchLiveSchedule,
+    fetchLiveSlotStatus,
+    getLiveSchedule,
+    getLiveSlotStatus,
+  } from '../data/api/livestream.js';
 
   export default {
     name: 'IndexDemo',
@@ -184,8 +184,7 @@
       },
 
       getLivestreamSchedule() {
-        const _data = getLivestreams()
-        const { data } = _data;
+        const data = getLiveSchedule();
 
         let happeningNow = [];
         let upcomingSchedules = [];
@@ -218,18 +217,17 @@
 
       async fetchLivestreamSchedule() {
         this.scheduleLoaded = false;
-        await fetchLivestreams().then(() => this.getLivestreamSchedule())
+        await fetchLiveSchedule().then(() => this.getLivestreamSchedule())
       },
 
       getLivestreamStatus() {
-        const _data = getLivestreamStatus()
-        const { data } = _data;
+        const data = getLiveSlotStatus();
 
         this.livestreamStatus = data;
       },
 
       async fetchLivestreamStatus() {
-        await fetchLivestreamStatus().then(() => this.getLivestreamStatus())
+        await fetchLiveSlotStatus().then(() => this.getLivestreamStatus())
       },
 
       fetchLivestreamStatusInterval() {

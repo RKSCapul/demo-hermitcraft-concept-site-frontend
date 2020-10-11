@@ -113,9 +113,9 @@
                   <q-item-section>
                     {{hermit.name}}
                   </q-item-section>
-                  <q-item-section side v-if="hermit.livestreams.twitch.isChannelLive">
+                  <!-- <q-item-section side v-if="hermit.livestreams.twitch.isChannelLive">
                     <q-badge class="live-on-twitch" label="LIVE" />
-                  </q-item-section>
+                  </q-item-section> -->
                 </q-item>
               </q-list>
             </q-card-section>
@@ -265,9 +265,14 @@
   import s6Maps from '../data/data-season-maps.js'
 
   import {
-    fetchChannels, 
-    getData 
-  } from '../data/api-endpoints.js';
+    fetchHermitChannels,
+    getHermitChannels
+  } from '../data/api/hermits.js'
+
+  import {
+    fetchLiveActiveHermits,
+    getLiveActiveHermits,
+  } from '../data/api/livestream.js'
 
   export default {
     name: 'HermitcraftLayout',
@@ -287,7 +292,7 @@
     created () {
       this.seasonMaps = s6Maps;
 
-      this.fetchChannelsFromApi();
+      this.executeFetchChannels();
     },
 
     methods: {
@@ -330,8 +335,7 @@
       },
 
       organizeHermits() {
-        const _data = getData();
-        const { data } = _data;
+        const data = getHermitChannels();
 
         let tempHermits = {
           active: [],
@@ -339,10 +343,10 @@
         };
 
         data.map(item => {
+          item["livestreams"] = {};
+
           if (item.status === "active") {
             tempHermits.active.push(item);
-
-            this.countActiveStreams(item);
           } else {
             tempHermits.inactive.push(item);
           }
@@ -350,10 +354,34 @@
 
         this.hermitsOrganized = tempHermits;
         this.isHermitListLoaded = true;
+
+        if (this.isHermitListLoaded)
+          this.executeFetchLiveActiveHermits();
       },
 
-      fetchChannelsFromApi() {
-        fetchChannels().then(() => this.organizeHermits())
+      executeFetchChannels() {
+        fetchHermitChannels().then(() => this.organizeHermits())
+      },
+
+      getLivestreamData(livestreamData, channelData) {
+        const index = livestreamData.findIndex(
+          status => status.channel.youtube === channelData.youtube && 
+                      status.channel.twitch === channelData.twitch
+        );
+
+        return livestreamData[index].livestreams;
+      },
+
+      organizeHermitLivestreamData() {
+        const _lsData = getLiveActiveHermits();
+
+        this.hermitsOrganized.active.map(item => {
+          item.livestreams = this.getLivestreamData(_lsData, item.channel);
+        });
+      },
+
+      executeFetchLiveActiveHermits() {
+        fetchLiveActiveHermits().then(() => this.organizeHermitLivestreamData());
       },
 
       getHomePage() {
