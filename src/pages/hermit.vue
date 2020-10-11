@@ -33,7 +33,7 @@
               <div class="social-group-column-item">
                 <div class="text-h5 text-bold text-uppercase">Groups</div>
                 <sidebar-group-item-component 
-                  v-for="data in groupData"
+                  v-for="data in hermitGroups"
                   :key="data.index"
                   :group="data" 
                 />
@@ -87,12 +87,18 @@
   import SidebarSocialItemComponent from '../components/SidebarSocialItemComponent.vue';
   import ProfileFooterComponent from '../components/ProfileFooterComponent.vue';
 
-  import { 
-    fetchChannel,
-    getChannelData,
-    fetchChannelVideos,
-    getChannelVideos,
-  } from '../data/api-endpoints.js'
+  import {
+    fetchHermitData,
+    fetchHermitVideos,
+
+    getHermitData,
+    getHermitVideos
+  } from "../data/api/hermits.js";
+
+  import {
+    fetchHermitGroup,
+    getHermitGroup,
+  } from "../data/api/groups.js";
 
   import groupIcons from '../data/data-vector-icon-collection.js';
   import socialIcons from '../data/data-icons-social-media-collection.js';
@@ -110,7 +116,7 @@
     
     watch: {
       username() {
-        this.fetchHermitData(this.username);
+        this.executeFetchHermitData(this.username);
       }
     },
 
@@ -118,6 +124,7 @@
       return {
         title: 'Hermitcraft Concept Redesign | r_coder demo',
         hermitData: [],
+        hermitGroups: [],
         mappedHermitData: [],
         mappedHermitVideos: [],
         dataLoaded: false,
@@ -130,22 +137,8 @@
     },
 
     created () {
-      this.fetchHermitData(this.username);
+      this.executeFetchHermitData(this.username);
       
-      // TODO: Temporary mock data, while backend not yet integrated with frontend.
-      this.groupData = [
-        {
-          index: 1,
-          icon: groupIcons.redstone,
-          name: 'Redstone'
-        },
-        {
-          index: 2,
-          icon: groupIcons.builder,
-          name: 'Builder'
-        }
-      ];
-
       // TODO: Temporary mock data, while backend not yet integrated with frontend.
       this.socialData = [
         {
@@ -170,36 +163,52 @@
         return this.title;
       },
 
-      getHermitData() {
-        const _data = getChannelData();
-        const { data } = _data;
+      getData() {
+        const data = getHermitData();
 
         this.mappedHermitData = data;
         this.dataLoaded = true;
 
-        this.fetchHermitVideos(this.username);
+        this.executeFetchHermitVideos(this.username);
+        this.executeFetchHermitGroups(this.username);
       },
 
-      fetchHermitData(username) {
+      executeFetchHermitData(username) {
         this.dataLoaded = false;
-        fetchChannel(username).then(() => this.getHermitData());
+        this.hermitGroups = [];
+        fetchHermitData(username).then(() => this.getData());
       },
 
-      getHermitVideos() {
-        const _data = getChannelVideos();
-        const { data } = _data;
+      getVideos() {
+        const data = getHermitVideos();
         
         this.mappedHermitVideos = data;
         this.videosLoaded = true;
       },
 
-      fetchHermitVideos(username) {
+      executeFetchHermitVideos(username) {
         this.videosFetched = true;
         this.videosLoaded = false;
-        fetchChannelVideos(username)
-          .then(() => this.getHermitVideos())
+        fetchHermitVideos(username)
+          .then(() => this.getVideos())
           .catch(() => this.videosFetched = false);
       },
+
+      getGroups() {
+        const data = getHermitGroup();
+
+        this.hermitGroups = data.map(item => {
+          return {
+            ...item,
+            icon: groupIcons.redstone,
+          }
+        });
+      },
+
+      executeFetchHermitGroups(username) {
+        fetchHermitGroup(username)
+          .then(() => this.getGroups());
+      }
     }
   }
 </script>
