@@ -80,7 +80,7 @@
               round
               flat
               size="md"
-              :icon="fabTwitch"
+              :icon="props.row.platform === 'Twitch' ? fabTwitch : fabYouTube"
               :style="'color: ' + colors[props.row.platform.toLowerCase()]"
             />
           </td>
@@ -194,7 +194,7 @@
   import timezones from '../data/data-default-timezones.js';
   import brandColors from '../data/data-brand-colors.js';
 
-  import { fabTwitch } from '@quasar/extras/fontawesome-v5';
+  import { fabTwitch, fabYoutube } from '@quasar/extras/fontawesome-v5';
 
   import moment from 'moment-timezone';
 
@@ -212,7 +212,8 @@
         title: '',
         liveStreamState: {},
         colors: brandColors,
-        fabTwitch: fabTwitch
+        fabTwitch: fabTwitch,
+        fabYouTube: fabYoutube
       }
     },
 
@@ -239,6 +240,8 @@
       },
 
       constructDate(_date, timezone) {
+        if (_date === "") return "N/A"
+
         let dateFormat = 'h:mm a'
         if (_date.split('T')[1].split(':')[1] === '00') {
           dateFormat = 'h a'
@@ -252,7 +255,7 @@
         let startTime = this.constructDate(start, tz);
         let endTime = this.constructDate(end, tz);
 
-        return `${startTime} - ${endTime}`;
+        return `${startTime}${endTime !== "N/A" ? ` - ${endTime}` : ""}`;
       },
 
       assignTimeZones(start, end) {
