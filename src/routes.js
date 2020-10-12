@@ -11,6 +11,11 @@ const routes = [
     component: require('./pages/livestream-day.vue').default,
   },
   {
+    path: '/recap',
+    name: 'recap',
+    component: require('./pages/recap.vue').default,
+  },
+  {
     path: '/timeline',
     name: 'timeline', 
     component: require('./pages/timeline-home.vue').default,
