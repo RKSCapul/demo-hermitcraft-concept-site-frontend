@@ -23,6 +23,14 @@
             </div>
             <div class="col-12 col-md-3 col-lg-2 q-mt-md social-group-column">
               <div class="q-mb-md social-group-column-item">
+                <div class="text-h5 text-bold text-uppercase">Main Channels</div>
+                <sidebar-social-item-component 
+                  v-for="data in mappedHermitChannels"
+                  :key="data.index"
+                  :socials="data"
+                />
+              </div>
+              <div class="q-mb-md social-group-column-item">
                 <div class="text-h5 text-bold text-uppercase">Socials</div>
                 <sidebar-social-item-component 
                   v-for="data in socialData"
@@ -102,6 +110,8 @@
 
   import groupIcons from '../data/data-vector-icon-collection.js';
   import socialIcons from '../data/data-icons-social-media-collection.js';
+  import brandColors from '../data/data-brand-colors.js'
+  import sites from '../data/data-channel-urls.js'
 
   export default {
     name: 'IndexDemo',
@@ -127,6 +137,7 @@
         hermitGroups: [],
         mappedHermitData: [],
         mappedHermitVideos: [],
+        mappedHermitChannels: [],
         dataLoaded: false,
         videosFetched: true,
         videosLoaded: false,
@@ -143,13 +154,17 @@
       this.socialData = [
         {
           index: 1,
-          icon: socialIcons.twitter,
-          name: 'Twitter'
+          site: sites["twitter"],
+          icon: socialIcons["twitter"],
+          color: brandColors["twitter"],
+          channel: "",
         },
         {
           index: 2,
-          icon: socialIcons.instagram,
-          name: 'Instagram'
+          site: sites["instagram"],
+          icon: socialIcons["instagram"],
+          color: brandColors["instagram"],
+          channel: "",
         }
       ];
     },
@@ -171,6 +186,8 @@
 
         this.executeFetchHermitVideos(this.username);
         this.executeFetchHermitGroups(this.username);
+        
+        this.organizeMainChannels(this.mappedHermitData);
       },
 
       executeFetchHermitData(username) {
@@ -208,6 +225,26 @@
       executeFetchHermitGroups(username) {
         fetchHermitGroup(username)
           .then(() => this.getGroups());
+      },
+
+      openChannel(url) {
+        window.open(url, "_blank");
+      },
+
+      organizeMainChannels(data) {
+        let x = 0;
+
+        this.mappedHermitChannels = Object.keys(data[0].channel).map(key => {
+          x++;
+
+          return {
+            index: x,
+            site: sites[key],
+            icon: socialIcons[key],
+            color: brandColors[key],
+            channel: data[0].channel[key],
+          }
+        });
       }
     }
   }
