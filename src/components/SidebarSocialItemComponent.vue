@@ -8,13 +8,13 @@
       clickable 
       v-ripple 
       class="no-padding"
-      @click="timeSelect = true"
+      @click="openChannel(socials.site.url + socials.channel)"
     >
       <q-card-section horizontal>
         <q-card-section>
           <div class="flex flex-center">
             <q-icon 
-              color="primary"
+              :style="'color: ' + socials.color"
               :name="socials.icon"
               size="sm"
             />
@@ -22,7 +22,7 @@
         </q-card-section>
         <q-card-section class="q-pl-none">
           <span class="caption font-open-sans no-margin">
-            {{ socials.name }}
+            {{ socials.site.name }}
           </span>
         </q-card-section>
       </q-card-section>
@@ -47,8 +47,8 @@
     props: [ 'socials' ],
 
     methods: {
-      externalRedirect(href) {
-        window.open(href, '_blank');
+      openChannel(url) {
+        window.open(url, "_blank");
       },
     }
   };
