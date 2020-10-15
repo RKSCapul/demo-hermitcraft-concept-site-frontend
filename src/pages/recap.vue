@@ -31,40 +31,30 @@
             <q-card-section>
               <div class="text-h5 text-center">Meet the Recap Team</div>
             </q-card-section>
-              <q-list>
-                <q-item clickable v-ripple>
-                  <q-item-section top avatar>
-                    <q-avatar>
-                      <img src="https://yt3.ggpht.com/a/AATXAJzuiYwDRraceHykUxRfrlZquCLj1P0WIXJlVxe4=s100-c-k-c0xffffffff-no-rj-mo">
-                    </q-avatar>
-                  </q-item-section>
+            <q-list :v-if="recapTeamLoaded">
+              <q-item 
+                v-for="members in recapTeam"
+                :key="members.id"
+                @click="openChannel(members.channel)"
+                clickable 
+                v-ripple 
+              >
+                <q-item-section top avatar>
+                  <q-avatar>
+                    <img :src="members.accountPicture" />
+                  </q-avatar>
+                </q-item-section>
 
-                  <q-item-section class="q-mt-none">
-                    <q-item-label class="text-h6">Pixlriffs</q-item-label>
-                    <q-item-label class="text-subtitle1 font-open-sans">Host / Writer</q-item-label>
-                  </q-item-section>
+                <q-item-section class="q-mt-none">
+                  <q-item-label class="text-h6">{{members.member}}</q-item-label>
+                  <q-item-label class="text-subtitle1 font-open-sans">{{members.role}}</q-item-label>
+                </q-item-section>
 
-                  <q-item-section side>
-                    <q-icon :name="fasExternalLink" color="white" />
-                  </q-item-section>
-                </q-item>
-                <q-item clickable v-ripple>
-                  <q-item-section top avatar>
-                    <q-avatar>
-                      <img src="https://yt3.ggpht.com/a/AATXAJyWnioMNuW0XQAofYZbB66NulRoY5RjoTkAMVjAOQ=s176-c-k-c0x00ffffff-no-rj-mo">
-                    </q-avatar>
-                  </q-item-section>
-
-                  <q-item-section class="q-mt-none">
-                    <q-item-label class="text-h6">ZloyXP</q-item-label>
-                    <q-item-label class="text-subtitle1 font-open-sans">Video Editor / Writer</q-item-label>
-                  </q-item-section>
-
-                  <q-item-section side>
-                    <q-icon :name="fasExternalLink" color="white" />
-                  </q-item-section>
-                </q-item>
-              </q-list>
+                <q-item-section side>
+                  <q-icon :name="fasExternalLink" color="white" />
+                </q-item-section>
+              </q-item>
+            </q-list>
           </q-card>
         </div>
       </div>
@@ -112,113 +102,51 @@
   }
 
   .video-section {
-    height: 400px;
+    height: 56.25vw;
+    max-height: 600px;
   }
 </style>
 
 <script>
-  import {
-    fetchLiveSchedule,
-    fetchLiveSlotStatus,
-    getLiveSchedule,
-    getLiveSlotStatus,
-  } from '../data/api/livestream.js';
-
   import { fasExternalLinkAlt } from "@quasar/extras/fontawesome-v5";
 
   export default {
-    name: 'IndexDemo',
+    name: 'Recap',
     layout: 'HermitcraftLayout',
     
     data () {
       return {
-        title: 'Live | Hermitcraft Concept Redesign | r_coder demo',
-        items: [],
-        livestreamStatus: [],
-        continents: [
-          'Africa',
-          'North America',
-          'South America',
-          'Asia',
-          'Europe',
-          'Oceania'
-        ],
-        selectedContinent: null,
-        selectedCountry: null,
-        timeSelect: false,
-        scheduleLoaded: false,
-        status_interval: null,
+        title: 'The Recap Team | Hermitcraft Concept Redesign | r_coder demo',
+        recapTeam: [],
+        recapTeamLoaded: false,
         fasExternalLink: fasExternalLinkAlt,
       }
     },
 
     created () {
-      // this.fetchLivestreamSchedule()
+      this.recapTeam = [
+        {
+          id: 1,
+          member: "Pixlriffs",
+          accountPicture: "https://yt3.ggpht.com/a/AATXAJzuiYwDRraceHykUxRfrlZquCLj1P0WIXJlVxe4=s100-c-k-c0xffffffff-no-rj-mo",
+          channel: "https://www.youtube.com/channel/UCgGjBqZZtAjxfpGSba7d6ww",
+          role: "Host / Writer",
+        },
+        {
+          id: 2,
+          member: "Zloy XP",
+          accountPicture: "https://yt3.ggpht.com/a/AATXAJyWnioMNuW0XQAofYZbB66NulRoY5RjoTkAMVjAOQ=s176-c-k-c0x00ffffff-no-rj-mo",
+          channel: "https://www.youtube.com/channel/UCvFZqf1gW_XSCZyTku15LSA",
+          role: "Video Producer / Writer",
+        }
+      ];
+
+      this.recapTeamLoaded = true;
     },
 
     methods: {
-      getPHTime() {
-        return '';
-      },
-
-      setMappedSchedule(data) {
-        this.items = data;
-        this.scheduleLoaded = true;
-      },
-
-      getLivestreamSchedule() {
-        const data = getLiveSchedule();
-
-        let happeningNow = [];
-        let upcomingSchedules = [];
-
-        data.map(item => {
-          if (!item.ongoing) {
-            upcomingSchedules.push(item);
-          } else {
-            happeningNow.push(item);
-          }
-        });
-
-        this.items = [
-          {
-            caption: 'Happening Today!',
-            schedules: happeningNow,
-          },
-          {
-            caption: 'Upcoming Schedules',
-            schedules: upcomingSchedules,
-          }
-        ];
-
-        this.scheduleLoaded = true;
-
-        if (happeningNow.length) {
-          this.fetchLivestreamStatusInterval();
-        }
-      },
-
-      async fetchLivestreamSchedule() {
-        this.scheduleLoaded = false;
-        await fetchLiveSchedule().then(() => this.getLivestreamSchedule())
-      },
-
-      getLivestreamStatus() {
-        const data = getLiveSlotStatus();
-
-        this.livestreamStatus = data;
-      },
-
-      async fetchLivestreamStatus() {
-        await fetchLiveSlotStatus().then(() => this.getLivestreamStatus())
-      },
-
-      fetchLivestreamStatusInterval() {
-        this.fetchLivestreamStatus()
-
-        this.status_interval = setInterval(() => {
-          this.fetchLivestreamStatus()
-        }, 150000)
+      openChannel(url) {
+        window.open(url, "_blank");
       }
     }
   }
