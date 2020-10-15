@@ -182,7 +182,11 @@
                 <q-item clickable v-ripple>
                   <q-item-section>Hermitcraft Seeds</q-item-section>
                 </q-item>
-                <q-item clickable v-ripple>
+                <q-item 
+                  clickable 
+                  v-ripple
+                  :to="getHomePage() + 'recap'"
+                >
                   <q-item-section>
                     Hermitcraft Recap
                     <q-item-label class="text-caption">With Pixlriffs &amp; ZloyXP</q-item-label>
