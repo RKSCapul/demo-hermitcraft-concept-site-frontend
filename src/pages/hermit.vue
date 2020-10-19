@@ -33,7 +33,7 @@
               <div class="q-mb-md social-group-column-item">
                 <div class="text-h5 text-bold text-uppercase">Socials</div>
                 <sidebar-social-item-component 
-                  v-for="data in socialData"
+                  v-for="data in mappedHermitSocials"
                   :key="data.index"
                   :socials="data"
                 />
@@ -98,9 +98,11 @@
   import {
     fetchHermitData,
     fetchHermitVideos,
+    fetchHermitSocials,
 
     getHermitData,
-    getHermitVideos
+    getHermitVideos,
+    getHermitSocials
   } from "../data/api/hermits.js";
 
   import {
@@ -138,6 +140,7 @@
         mappedHermitData: [],
         mappedHermitVideos: [],
         mappedHermitChannels: [],
+        mappedHermitSocials: [],
         dataLoaded: false,
         videosFetched: true,
         videosLoaded: false,
@@ -186,6 +189,7 @@
 
         this.executeFetchHermitVideos(this.username);
         this.executeFetchHermitGroups(this.username);
+        this.executeFetchHermitSocials(this.username);
         
         this.organizeMainChannels(this.mappedHermitData);
       },
@@ -206,6 +210,7 @@
       executeFetchHermitVideos(username) {
         this.videosFetched = true;
         this.videosLoaded = false;
+
         fetchHermitVideos(username)
           .then(() => this.getVideos())
           .catch(() => this.videosFetched = false);
@@ -242,10 +247,35 @@
             site: sites[key],
             icon: socialIcons[key],
             color: brandColors[key],
-            channel: data[0].channel[key],
+            url: data[0].channel[key],
           }
         });
+      },
+
+      getSocials() {
+        const data = getHermitSocials();
+
+        this.mappedHermitSocials = data.map(item => {
+          const { id, account, title, url } = item;
+          const _account = account.toLowerCase();
+
+          return {
+            index: id,
+            site: {
+              url: sites[_account].url,
+              name: title,
+            },
+            icon: socialIcons[_account],
+            color: brandColors[_account],
+            url,
+          }
+        });
+      },
+
+      executeFetchHermitSocials(username) {
+        fetchHermitSocials(username)
+          .then(() => this.getSocials());
       }
-    }
+    } 
   }
 </script>

@@ -4,6 +4,7 @@ const brandColors = {
   twitter: '00acee',
   instagram: '#fb3958',
   mixer: '#000000',
+  patreon: '#ff424d'
 }
 
-export default brandColors;
+export default brandColors; 

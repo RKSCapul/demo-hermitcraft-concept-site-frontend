@@ -3,7 +3,8 @@ import {
   fabInstagram,
   fabTwitter,
   fabTwitch,
-  fabFacebook
+  fabFacebook,
+  fabPatreon,
 } from '@quasar/extras/fontawesome-v5';
 
 const socialIcons = {
@@ -12,6 +13,7 @@ const socialIcons = {
   twitch: fabTwitch,
   twitter: fabTwitter,
   youtube: fabYoutube,
+  patreon: fabPatreon,
 }
 
 export default socialIcons;
