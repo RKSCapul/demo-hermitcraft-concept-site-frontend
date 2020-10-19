@@ -8,7 +8,7 @@
       clickable 
       v-ripple 
       class="no-padding"
-      @click="openChannel(socials.site.url + socials.channel)"
+      @click="openChannel(socials.site.url + socials.url)"
     >
       <q-card-section horizontal>
         <q-card-section>

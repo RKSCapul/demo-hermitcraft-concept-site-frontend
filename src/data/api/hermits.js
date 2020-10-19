@@ -2,12 +2,13 @@
 var axios = require('axios');
 
 /* Variables */
-const WEB_API = process.env.VUE_APP_ENDPOINT_URL
+const WEB_API = process.env.VUE_APP_ENDPOINT_URL;
 
 var hermitChannels;
 var hermitActiveRecentVideos;
 var hermitData;
 var hermitVideos;
+var hermitSocials;
 
 /* Get all channels */
 function setHermitChannels(data) {
@@ -69,6 +70,21 @@ async function fetchHermitVideos(channel) {
     .then(json => setHermitVideos(json));
 }
 
+/* Get channel socials by username as filter */
+function setHermitSocials(data) {
+  hermitSocials = data;
+}
+
+function getHermitSocials() {
+  return hermitSocials.data;
+}
+
+async function fetchHermitSocials(channel) {
+  await axios
+    .get(`${WEB_API}/api/hermit/user/${channel}/socials`)
+    .then(json => setHermitSocials(json));
+}
+
 
 
 export {
@@ -76,9 +92,11 @@ export {
   fetchHermitActiveRecentVideos,
   fetchHermitData,
   fetchHermitVideos,
+  fetchHermitSocials,
 
   getHermitChannels,
   getHermitActiveRecentVideos,
   getHermitData,
-  getHermitVideos
+  getHermitVideos,
+  getHermitSocials
 };
