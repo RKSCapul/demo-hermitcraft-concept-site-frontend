@@ -2,8 +2,7 @@
 var axios = require('axios');
 
 /* Variables */
-// const WEB_API = process.env.VUE_APP_ENDPOINT_URL
-const WEB_API = "http://localhost:5000"
+const WEB_API = process.env.VUE_APP_ENDPOINT_URL;
 
 var hermitChannels;
 var hermitActiveRecentVideos;
