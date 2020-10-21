@@ -1,10 +1,17 @@
 <template>
   <q-card class="q-my-sm q-pa-xs">
     <div class="mobile-thumbnail">
-      <img :src="videoData.thumbnail" />
+      <img 
+        :src="videoData.thumbnail" 
+        @click="openVideo()"
+        class="pointer"
+      />
     </div>
     <q-card-section class="q-pa-sm mobile-video-data">
-      <div class="video-title q-mb-xs">{{ videoData.title }}</div>
+      <div 
+        class="video-title q-mb-xs pointer"
+        @click="openVideo()"
+      >{{ videoData.title }}</div>
       <div class="video-statistics font-open-sans">
         <span class="q-mr-sm"><q-icon name="r_visibility" size="15px" /> {{ videoData.statistics.views }}</span>
         <span class="q-mr-sm"><q-icon name="r_thumb_up" size="15px" /> {{ videoData.statistics.likes }}</span>
@@ -20,6 +27,8 @@
   .mobile-video-data .video-title
     font-size: map-get($body1, 'size')
     font-weight: 500
+    &:hover
+      text-decoration: underline
 
   .mobile-video-data .video-statistics
     font-size: map-get($caption, 'size')
@@ -60,6 +69,10 @@
     methods: {
       externalRedirect(href) {
         window.open(href, '_blank');
+      },
+
+      openVideo() {
+        this.externalRedirect(`https://youtube.com/watch?v=${this.videoData.id}`);
       },
     }
   };

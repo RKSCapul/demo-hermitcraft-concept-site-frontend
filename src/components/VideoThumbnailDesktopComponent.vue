@@ -3,12 +3,19 @@
     <q-card-section horizontal>
       <q-card-section class="desktop-thumbnail container">
         <div>
-          <img :src="videoData.thumbnail" />
+          <img 
+            :src="videoData.thumbnail" 
+            @click="openVideo()"
+            class="pointer"
+          />
         </div>
       </q-card-section>
 
       <q-card-section class="q-py-xs desktop-video-data">
-        <div class="video-title">{{ videoData.title }}</div>
+        <div 
+          @click="openVideo()"
+          class="video-title pointer"
+        >{{ videoData.title }}</div>
         <div class="video-statistics font-open-sans">
           <span class="q-mr-sm"><q-icon name="r_visibility" size="20px" /> {{ videoData.statistics.views }}</span>
           <span class="q-mr-sm"><q-icon name="r_thumb_up" size="20px" /> {{ videoData.statistics.likes }}</span>
@@ -28,6 +35,8 @@
   .desktop-video-data .video-title
     font-size: map-get($h5, 'size')
     font-weight: 500
+    &:hover
+      text-decoration: underline
 
   .video-thumbnail-component
     padding: map-get($space-xs, "x")
@@ -58,6 +67,10 @@
     top: 50%;
     transform: translate(-50%, -50%);
   }
+
+  .pointer {
+    cursor: pointer;
+  }
 </style>
 
 <script>
@@ -75,6 +88,10 @@
     methods: {
       externalRedirect(href) {
         window.open(href, '_blank');
+      },
+
+      openVideo() {
+        this.externalRedirect(`https://youtube.com/watch?v=${this.videoData.id}`);
       },
     }
   };
