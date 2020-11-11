@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "cp redirects.txt dist/_redirects && cp headers.txt dist/_headers && vue-cli-service build",
+    "build": "vue-cli-service build && cp redirects.txt dist/_redirects && cp headers.txt dist/_headers",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
