@@ -1,0 +1,2 @@
+https://demo-hermitcraft-concept.netlify.app/*
+   X-Robots-Tag: noindex
